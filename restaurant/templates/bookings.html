@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section>
+  <article>
+    <h1>All Reservations</h1>
+    <h3>please use /bookings/?date=2025-06-19  format to search for specific date</h3>
+    {% if message %}
+    <div class="message">{{ message }}</div>
+    {% endif %}
+    
+    {% if bookings and bookings != '[]' %}
+    <div class="json-container">
+      <h2>Bookings Data</h2>
+      <pre class="json-content">{{ bookings }}</pre>
+    </div>
+    {% endif %}
+    
+    <div class="date-filter">
+      <h3>Filter by Date</h3>
+      <input type="date" id="date-filter" class="date-input">
+      <button id="filter-button" class="btn">Filter</button>
+      <button id="reset-button" class="btn btn-secondary">Reset</button>
+    </div>
+  </article>
+</section>
+
+<script>
+  // Check URL for date parameter and set the date filter value
+  document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const dateParam = urlParams.get('date');
+    
+    if (dateParam) {
+      document.getElementById('date-filter').value = dateParam;
+    }
+  });
+  
+  // Set up filter button
+  document.getElementById('filter-button').addEventListener('click', function() {
+    const dateValue = document.getElementById('date-filter').value;
+    if (dateValue) {
+      window.location.href = `/bookings?date=${dateValue}`;
+    } else {
+      alert('Please select a date to filter by.');
+    }
+  });
+  
+  // Set up reset button
+  document.getElementById('reset-button').addEventListener('click', function() {
+    window.location.href = '/bookings';
+  });
+</script>
+
+<style>
+  .message {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    border-left: 5px solid #495E57;
+    color: #333;
+  }
+  
+  .json-container {
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+  }
+  
+  .json-content {
+    background-color: #272822;
+    color: #f8f8f2;
+    padding: 15px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  
+  .date-filter {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+  }
+  
+  .date-input {
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    margin-right: 10px;
+  }
+  
+  .btn {
+    background-color: #495E57;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+  }
+  
+  .btn:hover {
+    opacity: 0.9;
+  }
+  
+  /* Syntax highlighting-like styles for JSON */
+  .json-content .string { color: #a6e22e; }
+  .json-content .number { color: #ae81ff; }
+  .json-content .boolean { color: #f92672; }
+  .json-content .null { color: #f92672; }
+  .json-content .key { color: #66d9ef; }
+</style>
+{% endblock %}
